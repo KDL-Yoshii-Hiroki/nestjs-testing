@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: ./app
+      dockerfile: ../docker/app/Dockerfile
+    ports:
+      - "8081:3000"
+    environment:
+      - DATABASE_HOST=mysql
+      - DATABASE_PORT=3306
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=test_db
+    depends_on:
+      - mysql
+    volumes:
+      - ./app:/usr/src/app
+
+  mysql:
+    build:
+      context: ./docker/mysql  # Dockerfileの存在するディレクトリを指定
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_db
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
